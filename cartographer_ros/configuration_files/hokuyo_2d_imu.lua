@@ -36,12 +36,12 @@ MAP_BUILDER.num_background_threads = 7
 TRAJECTORY_BUILDER_2D.use_imu_data = true
 TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = true
 
-TRAJECTORY_BUILDER_2D.laser_min_range = 0.02
+TRAJECTORY_BUILDER_2D.laser_min_range = 0.2
 TRAJECTORY_BUILDER_2D.laser_max_range = 30.
-TRAJECTORY_BUILDER_2D.laser_missing_echo_ray_length = 0.5
+--TRAJECTORY_BUILDER_2D.laser_missing_echo_ray_length = 0.2
 
-TRAJECTORY_BUILDER_2D.submaps.resolution = 0.4
-TRAJECTORY_BUILDER_2D.submaps.output_debug_images = true
+--TRAJECTORY_BUILDER_2D.submaps.resolution = 0.4
+--TRAJECTORY_BUILDER_2D.submaps.output_debug_images = true
 
 
 

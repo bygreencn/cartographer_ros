@@ -20,16 +20,17 @@
 
   <arg name="debugger" default="" />
   <!-- <param name="publish_frequency" type="double" value="200"/> -->
-  <param name="use_tf_static" type="bool" value="true"/>	    
+  <!-- <param name="use_tf_static" type="bool" value="false"/> -->
   <param name="enable_statistics" type="bool" value="true"/>
 
   <node name="robot_state_publisher" pkg="robot_state_publisher"
-    type="robot_state_publisher" />
+    type="robot_state_publisher">
+  </node>
 
   <node pkg="urg_node" type="urg_node" name="hokuyo_UTM_30LX_h" output="screen">
     <param name="ip_address" value="192.168.20.10"/>
     <param name="frame_id" value="horizontal_laser_link"/>
-    <param name="calibrate_time" type="bool" value="true"/>  
+    <param name="calibrate_time" type="bool" value="false"/>  
     <param name="intensity" type="bool" value="false"/>
     <param name="cluster" value="1"/>
     <param name="publish_intensity" value = "false"/>
@@ -64,8 +65,8 @@
       <param name="device" value="/dev/ttyS0"/>
       <param name="baudrate" value="115200"/>
       <param name="frame_id" value="imu_link"/>
-      <param name="frame_local" value="NWU"/>
-      <!-- <remap from="imu" to="imu_link" /> -->
+      <param name="frame_local" value="ENU"/>
+      <remap from="imu" to="imu" />
   </node>
 
   <node name="cartographer_node" pkg="cartographer_ros"
@@ -75,18 +76,21 @@
           -configuration_basename hokuyo_2d_imu.lua"
       output="screen"
       launch-prefix="$(arg debugger)" >
-      <!-- launch-prefix="$(arg debugger)" 
-
-      <remap from="scan" to="horizontal_laser_2d" />
-      <remap from="imu" to="/imu/data" />
-      -->
-      <!--<remap from="scan" to="horizontal_laser_2d" /> -->
+      <!-- <remap from="scan" to="horizontal_laser_link" /> -->
+      <!-- <remap from="imu" to="/imu/data" /> -->
   </node>
 
-  <node name="rviz" pkg="rviz" type="rviz" required="true"
+  <node name="robot_bag" pkg="rosbag" type="record" 
+      args="-o robot_bag /imu /scan">
+  </node>
+
+   
+  <node name="rviz" pkg="rviz" type="rviz" required="false"
       args="-d $(find cartographer_ros)/configuration_files/hokuyo_2d_imu.rviz">
   </node>
-
+  
   <!-- DEBUG -->		
-  <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui"/>
+  <!-- <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui"/> -->
+  <!-- <node name="rqt_graph" pkg="rqt_graph" type="rqt_graph"/> -->
+  <!-- rosservice call /finish_trajectory "stem: 'zongheng'" -->
 </launch>

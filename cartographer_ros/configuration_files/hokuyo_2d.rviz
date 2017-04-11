@@ -120,11 +120,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        vertical_laser_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
