@@ -35,8 +35,47 @@
     <param name="cluster" value="1"/>
     <param name="publish_intensity" value = "false"/>
     <param name="publish_multiecho" value = "false"/>
-    <remap from="scan" to="scan" /> 
+    <remap from="scan" to="horizontal_laser_scan" /> 
   </node> 
+  <!--
+    Convert laser scan to 3D point cloud into fixed frame not rotating along with sensor.
+    Also performs scan shadow point filtering
+  -->
+  <node pkg="hector_laserscan_to_pointcloud" type="laserscan_to_pointcloud_node" name="hokuyo_UTM_30LX_h_scan_to_ptcld" respawn="true">
+    <param name="min_range" value="0.05" />
+    <param name="max_range" value="29.95" />
+    <param name="use_high_fidelity_projection" value="false" />
+    <param name="scan_topic" value="horizontal_laser_scan" />
+    <param name="cloud_topic" value="horizontal_laser_cloud" />
+    <param name="target_frame" value="horizontal_laser_cloud_link" />
+    <rosparam command="load" file="$(find hector_laserscan_to_pointcloud)/config/default_scan_shadow_filter.yaml" />
+  </node>
+
+
+  <node pkg="urg_node" type="urg_node" name="hokuyo_UTM_30LX_v" output="screen">
+    <param name="ip_address" value="192.168.0.10"/>
+    <param name="frame_id" value="vertical_laser_link"/>
+    <param name="calibrate_time" type="bool" value="false"/>  
+    <param name="intensity" type="bool" value="false"/>
+    <param name="cluster" value="1"/>
+    <param name="publish_intensity" value = "false"/>
+    <param name="publish_multiecho" value = "false"/>
+    <remap from="scan" to="vertical_laser_scan" /> 
+  </node> 
+  <!--
+    Convert laser scan to 3D point cloud into fixed frame not rotating along with sensor.
+    Also performs scan shadow point filtering
+  -->
+  <node pkg="hector_laserscan_to_pointcloud" type="laserscan_to_pointcloud_node" name="hokuyo_UTM_30LX_v_scan_to_ptcld" respawn="true">
+    <param name="min_range" value="0.05" />
+    <param name="max_range" value="29.95" />
+    <param name="use_high_fidelity_projection" value="false" />
+    <param name="scan_topic" value="vertical_laser_scan" />
+    <param name="cloud_topic" value="vertical_laser_cloud" />
+    <param name="target_frame" value="vertical_laser_cloud_link" />
+    <rosparam command="load" file="$(find hector_laserscan_to_pointcloud)/config/default_scan_shadow_filter.yaml" />
+  </node>
+
 
 <!--
   <node pkg="urg_node" type="urg_node" name="hokuyo_UTM_30LX_v" output="screen">
@@ -50,47 +89,22 @@
     <remap from="scan" to="scan" /> 
   </node> 
  -->
-<!--
-  <node pkg="hokuyo_node" type="hokuyo_node" name="hokuyo_URG_04LX" output="screen">
-    <param name="calibrate_time" type="bool" value="false"/> 
-    <param name="port" type="string" value="/dev/ttyACM0"/> 
-    <param name="intensity" type="bool" value="false"/> 
-    <param name="frameid" value="vertical_laser_link"/>
-    <param name="port" type="string" value="/dev/ttyACM0"/> 
-  </node>
--->
-  <node name="xsens_driver" pkg="xsens_driver" 
-      type="mtnode.py"  
-      output="screen" >
-      <param name="device" value="/dev/ttyS0"/>
-      <param name="baudrate" value="115200"/>
-      <param name="frame_id" value="imu_link"/>
-      <param name="frame_local" value="ENU"/>
-      <remap from="imu" to="imu" />
-  </node>
 
-  <node name="cartographer_node" pkg="cartographer_ros"
-      type="cartographer_node" args="
-          -configuration_directory
-              $(find cartographer_ros)/configuration_files
-          -configuration_basename hokuyo_2d_imu.lua"
-      output="screen"
-      launch-prefix="$(arg debugger)" >
-      <!-- <remap from="scan" to="horizontal_laser_link" /> -->
-      <!-- <remap from="imu" to="/imu/data" /> -->
-  </node>
 
+
+
+  <!--
   <node name="robot_bag" pkg="rosbag" type="record" 
       args="-o robot_bag /imu /scan">
   </node>
-
+  -->
    
-  <node name="rviz" pkg="rviz" type="rviz" required="false"
-      args="-d $(find cartographer_ros)/configuration_files/hokuyo_2d_imu.rviz">
+  <node name="rviz" pkg="rviz" type="rviz" required="true"
+      args="-d $(find cartographer_ros)/configuration_files/hokuyo_3d_imu.rviz">
   </node>
   
   <!-- DEBUG -->		
   <!-- <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui"/> -->
   <!-- <node name="rqt_graph" pkg="rqt_graph" type="rqt_graph"/> -->
-  <!-- rosservice call /finish_trajectory "stem: 'zongheng'" -->
+
 </launch>
