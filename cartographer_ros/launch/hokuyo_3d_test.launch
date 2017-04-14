@@ -16,7 +16,7 @@
 
 <launch>
   <param name="robot_description"
-    textfile="$(find cartographer_ros)/urdf/hokuyo_2d_imu.urdf" />
+    textfile="$(find cartographer_ros)/urdf/hokuyo_imu.urdf" />
 
   <arg name="debugger" default="" />
   <!-- <param name="publish_frequency" type="double" value="200"/> -->
@@ -41,14 +41,14 @@
     Convert laser scan to 3D point cloud into fixed frame not rotating along with sensor.
     Also performs scan shadow point filtering
   -->
-  <node pkg="hector_laserscan_to_pointcloud" type="laserscan_to_pointcloud_node" name="hokuyo_UTM_30LX_h_scan_to_ptcld" respawn="true">
+  <node pkg="laserscan_to_pointcloud" type="laserscan_to_pointcloud_node" name="hokuyo_UTM_30LX_h_scan_to_ptcld" respawn="true">
     <param name="min_range" value="0.05" />
     <param name="max_range" value="29.95" />
     <param name="use_high_fidelity_projection" value="false" />
     <param name="scan_topic" value="horizontal_laser_scan" />
     <param name="cloud_topic" value="horizontal_laser_cloud" />
     <param name="target_frame" value="horizontal_laser_cloud_link" />
-    <rosparam command="load" file="$(find hector_laserscan_to_pointcloud)/config/default_scan_shadow_filter.yaml" />
+    <rosparam command="load" file="$(find laserscan_to_pointcloud)/config/default_scan_shadow_filter.yaml" />
   </node>
 
 
@@ -66,14 +66,14 @@
     Convert laser scan to 3D point cloud into fixed frame not rotating along with sensor.
     Also performs scan shadow point filtering
   -->
-  <node pkg="hector_laserscan_to_pointcloud" type="laserscan_to_pointcloud_node" name="hokuyo_UTM_30LX_v_scan_to_ptcld" respawn="true">
+  <node pkg="laserscan_to_pointcloud" type="laserscan_to_pointcloud_node" name="hokuyo_UTM_30LX_v_scan_to_ptcld" respawn="true">
     <param name="min_range" value="0.05" />
     <param name="max_range" value="29.95" />
     <param name="use_high_fidelity_projection" value="false" />
     <param name="scan_topic" value="vertical_laser_scan" />
     <param name="cloud_topic" value="vertical_laser_cloud" />
     <param name="target_frame" value="vertical_laser_cloud_link" />
-    <rosparam command="load" file="$(find hector_laserscan_to_pointcloud)/config/default_scan_shadow_filter.yaml" />
+    <rosparam command="load" file="$(find laserscan_to_pointcloud)/config/default_scan_shadow_filter.yaml" />
   </node>
 
 

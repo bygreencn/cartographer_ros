@@ -4,7 +4,6 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Submaps1
         - /PointCloud21
       Splitter Ratio: 0.600671
     Tree Height: 595
@@ -135,7 +134,7 @@ Visualization Manager:
       Axis: Z
       Channel Name: intensity
       Class: rviz/PointCloud2
-      Color: 255; 85; 255
+      Color: 85; 255; 0
       Color Transformer: FlatColor
       Decay Time: 0
       Enabled: true
@@ -149,7 +148,7 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.05
+      Size (m): 0.03
       Style: Flat Squares
       Topic: /scan_matched_points2
       Unreliable: false
@@ -159,8 +158,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 0
-        Min Value: 0
+        Max Value: 0.120976
+        Min Value: -0.218474
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -168,7 +167,7 @@ Visualization Manager:
       Color: 0; 255; 127
       Color Transformer: AxisColor
       Decay Time: 0
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -181,7 +180,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.02
       Style: Flat Squares
-      Topic: /horizontal_laser_scan
+      Topic: /scan
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -198,7 +197,7 @@ Visualization Manager:
       Color: 85; 170; 255
       Color Transformer: AxisColor
       Decay Time: 0
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -215,7 +214,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: false
+      Value: true
     - Acceleration properties:
         Acc. vector alpha: 1
         Acc. vector color: 170; 170; 255
@@ -271,7 +270,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 12.4231
+      Distance: 11.4737
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
@@ -283,10 +282,10 @@ Visualization Manager:
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.489797
+      Pitch: 0.609797
       Target Frame: <Fixed Frame>
       Value: XYOrbit (rviz)
-      Yaw: 3.18858
+      Yaw: 2.42358
     Saved: ~
 Window Geometry:
   Displays:
