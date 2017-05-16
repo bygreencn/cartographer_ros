@@ -1,3 +1,4 @@
+
 <!--
   Copyright 2016 The Cartographer Authors
 
@@ -14,30 +15,55 @@
   limitations under the License.
 -->
 
+
+
 <launch>
-  <param name="/use_sim_time" value="true" />
   <param name="robot_description"
-    textfile="$(find cartographer_ros)/urdf/hokuyo_imu.urdf" />
+    textfile="$(find cartographer_ros)/urdf/velodyne_h.urdf" />
 
   <arg name="debugger" default="" />
-
+  <!-- <param name="publish_frequency" type="double" value="200"/> -->
+  <!-- <param name="use_tf_static" type="bool" value="false"/> -->
+  <param name="enable_statistics" type="bool" value="false"/>
 
   <node name="robot_state_publisher" pkg="robot_state_publisher"
     type="robot_state_publisher">
   </node>
 
+  
+
+  <node name="xsens_driver" pkg="xsens_driver" 
+      type="mtnode.py"  
+      output="screen" >
+      <param name="device" value="/dev/ttyUSB0"/>
+      <param name="baudrate" value="460800"/>
+      <param name="frame_id" value="imu_link"/>
+      <param name="frame_local" value="ENU"/>
+      <remap from="imu" to="imu" />
+  </node>
+
+  <include file="$(find cartographer_ros)/launch/m3_3d_points.launch" />
+
+
   <node name="cartographer_node" pkg="cartographer_ros"
       type="cartographer_node" args="
-          -configuration_directory $(find cartographer_ros)/configuration_files
-          -configuration_basename hokuyo_3d_imu.lua"
+          -configuration_directory
+              $(find cartographer_ros)/configuration_files
+          -configuration_basename backpack_3d.lua"
       output="screen"
       launch-prefix="$(arg debugger)" >
+      <!-- <remap from="/points2_1" to="horizontal_laser_3d" /> -->
+      <!-- <remap from="/points2_2" to="vertical_laser_3d" /> -->
+
   </node>
 
-  <node name="playbag" pkg="rosbag" type="play"
-      args="--clock $(arg bag_filename)" >
-  </node>
 
+<!--
+  <node name="robot_bag" pkg="rosbag" type="record" 
+      args="-o robot_bag /imu /points2_1 /points2_2">
+  </node>
+-->
+   
   <node name="rviz" pkg="rviz" type="rviz" required="true"
       args="-d $(find cartographer_ros)/configuration_files/hokuyo_3d_imu.rviz">
   </node>

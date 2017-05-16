@@ -1,0 +1,40 @@
+<!--
+  Copyright 2016 The Cartographer Authors
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<launch>
+  <arg name="ns" default="sensor" />
+
+  <arg name="ip1" default="192.168.160.3" />
+  <arg name="ip2" default="192.168.161.4" />
+  <arg name="host1" default="$(arg ip1)" />
+  <arg name="host2" default="$(arg ip2)" />
+
+  <!-- driver -->
+  <group ns="$(arg ns)">
+    <node name="client_node1" 
+          pkg="quanergy_client_ros" 
+          type="client_node" 
+          args="-host $(arg host1) -settings $(find quanergy_client_ros)/settings/client1.xml -frame $(arg ns) -topic points2_1"
+          required="true" 
+          output="screen"/>
+
+    <node name="client_node2" 
+          pkg="quanergy_client_ros" 
+          type="client_node" 
+          args="-host $(arg host2) -settings $(find quanergy_client_ros)/settings/client2.xml -frame $(arg ns) -topic points2_2"
+          required="true" 
+          output="screen"/>
+  </group>
+</launch>

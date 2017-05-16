@@ -1,0 +1,46 @@
+<!--
+  Copyright 2016 The Cartographer Authors
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<launch>
+  
+
+  <!-- <arg name="debugger" default="" />  -->
+  <!-- <param name="publish_frequency" type="double" value="200"/> -->
+  <!-- <param name="use_tf_static" type="bool" value="false"/> -->
+  <!-- param name="enable_statistics" type="bool" value="false" -->
+
+  <!--  <node name="robot_state_publisher" pkg="robot_state_publisher"
+    type="robot_state_publisher">
+  </node>  -->
+
+
+  <!-- <node name="Quanergy_M8_vertical" 
+        pkg="quanergy_client_ros" 
+        type="client_node" 
+        args="-host 192.168.1.4 -settings $(find quanergy_client_ros)/settings/client.xml "
+        required="true" 
+        output="screen">
+       
+  </node> 
+  -->
+
+  <include file="$(find cartographer_ros)/launch/m3_3d_points.launch" />
+
+  <node name="rviz" pkg="rviz" type="rviz" required="true"
+      args="-d $(find cartographer_ros)/configuration_files/velodyne_3d_imu.rviz">
+  </node>
+
+</launch>

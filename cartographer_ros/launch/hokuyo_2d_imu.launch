@@ -39,7 +39,6 @@
     <remap from="scan" to="scan" /> 
   </node> 
 
-<!--
   <node pkg="urg_node" type="urg_node" name="hokuyo_UTM_30LX_v" output="screen">
     <param name="ip_address" value="192.168.0.10"/>
     <param name="frame_id" value="vertical_laser_link"/>
@@ -51,7 +50,6 @@
     <remap from="scan" to="vertical_laser_scan" /> 
   </node> 
 
- -->
 <!--
   <node pkg="hokuyo_node" type="hokuyo_node" name="hokuyo_URG_04LX" output="screen">
     <param name="calibrate_time" type="bool" value="false"/> 
@@ -83,7 +81,7 @@
   </node>
 
   <node name="robot_bag" pkg="rosbag" type="record" 
-      args="-o robot_bag /imu /scan">
+      args="-o robot_bag /imu /scan /vertical_laser_scan">
   </node>
 
    

@@ -1,0 +1,109 @@
+<!--
+  Copyright 2016 The Cartographer Authors
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<launch>
+  
+
+  <arg name="debugger" default="" /> 
+  <!-- <param name="publish_frequency" type="double" value="200"/> -->
+  <!-- <param name="use_tf_static" type="bool" value="false"/> -->
+  <!-- param name="enable_statistics" type="bool" value="false" -->
+
+<!--  <node name="robot_state_publisher" pkg="robot_state_publisher"
+    type="robot_state_publisher">
+  </node>  -->
+
+<!-- LaserScan -->
+  <node name="Quanergy_M8_horizontal" 
+        pkg="quanergy_client_ros" 
+        type="client_node" 
+        args="-host 192.168.0.3 -settings $(find quanergy_client_ros)/settings/client.xml "
+        required="true" 
+        output="screen">
+    <remap from="scan" to="horizontal_laser_scan"  />
+    <!-- <remap from="scan" to="scan" /> -->
+  </node> 
+
+   <!--
+    Convert laser scan to 3D point cloud into fixed frame not rotating along with sensor.
+    Also performs scan shadow point filtering
+  -->
+  <node pkg="laserscan_to_pointcloud" type="laserscan_to_pointcloud_node" name="Quanergy_M8_h_scan_to_ptcld" respawn="true">
+    <param name="min_range" value="0.05" />
+    <param name="max_range" value="29.95" />
+    <param name="use_high_fidelity_projection" value="false" />
+    <param name="scan_topic" value="horizontal_laser_scan" />
+    <param name="cloud_topic" value="points2_1" />
+    <param name="target_frame" value="horizontal_laser_cloud_link" />
+    <rosparam command="load" file="$(find laserscan_to_pointcloud)/config/default_scan_shadow_filter.yaml" />
+  </node>
+ 
+
+  <node name="Quanergy_M8_vertical" 
+        pkg="quanergy_client_ros" 
+        type="client_node" 
+        args="-host 192.168.1.4 -settings $(find quanergy_client_ros)/settings/client.xml "
+        required="true" 
+        output="screen">
+    <remap from="scan" to="vertical_laser_scan" /> 
+    <!-- <remap from="scan" to="scan" /> -->
+  </node> 
+
+   <!--
+    Convert laser scan to 3D point cloud into fixed frame not rotating along with sensor.
+    Also performs scan shadow point filtering
+  -->
+  <node pkg="laserscan_to_pointcloud" type="laserscan_to_pointcloud_node" name="Quanergy_M8_v_scan_to_ptcld" respawn="true">
+    <param name="min_range" value="0.05" />
+    <param name="max_range" value="29.95" />
+    <param name="use_high_fidelity_projection" value="false" />
+    <param name="scan_topic" value="vertical_laser_scan" />
+    <param name="cloud_topic" value="points2_2" />
+    <param name="target_frame" value="vertical_laser_cloud_link" />
+    <rosparam command="load" file="$(find laserscan_to_pointcloud)/config/default_scan_shadow_filter.yaml" />
+  </node>
+
+<!-- IMU -->
+  <node name="xsens_driver" pkg="xsens_driver" 
+      type="mtnode.py"  
+      output="screen" >
+      <param name="device" value="/dev/ttyUSB0"/>
+      <param name="baudrate" value="460800"/>
+      <param name="frame_id" value="imu_link"/>
+      <param name="frame_local" value="ENU"/>
+      <remap from="imu" to="imu" />
+  </node>
+
+  <node name="cartographer_node" pkg="cartographer_ros"
+      type="cartographer_node" args="
+          -configuration_directory
+              $(find cartographer_ros)/configuration_files
+          -configuration_basename hokuyo_3d_imu.lua"
+      output="screen"
+      launch-prefix="$(arg debugger)" >
+      <!-- <remap from="points2_1" to="horizontal_laser_3d" /> -->
+      <!-- <remap from="points2_2" to="vertical_laser_3d" /> -->
+  </node>
+
+
+  <node name="robot_bag" pkg="rosbag" type="record" 
+      args="-o robot_bag /imu /points2_1 /points2_2">
+  </node>
+
+  <node name="rviz" pkg="rviz" type="rviz" required="true" />
+    <!-- args="-d $(find cartographer_ros)/configuration_files/hokuyo_3d_imu.rviz"> -->
+
+</launch>

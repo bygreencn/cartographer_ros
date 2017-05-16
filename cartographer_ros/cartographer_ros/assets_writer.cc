@@ -29,6 +29,10 @@
 #include "cartographer_ros/occupancy_grid.h"
 #include "nav_msgs/OccupancyGrid.h"
 
+#include <pcl/io/pcd_io.h>
+
+#include <fstream>
+
 namespace cartographer_ros {
 
 // Writes an occupancy grid.
@@ -42,6 +46,45 @@ void Write2DAssets(
   BuildOccupancyGrid2D(trajectory_nodes, map_frame, submaps_options,
                        &occupancy_grid);
   WriteOccupancyGridToPgmAndYaml(occupancy_grid, stem);
+  LOG(INFO) << ("trajectory_nodes_number: "+std::to_string(trajectory_nodes.size()));
+  std::ofstream in;
+  in.open("/home/yfb/trajectory2d.txt",std::ios::trunc); 
+  pcl::PointCloud<pcl::PointXYZ> cloud_test;
+  for(auto node_test:trajectory_nodes)
+  {
+      std::vector<Eigen::Vector3f>  returns =  node_test.constant_data->range_data_2d.returns;
+      for(auto point:returns)
+      {
+        //Eigen::Quaternion<float> q_float = static_cast<Eigen::Quaternion<float>> (node_test.pose.rotation());
+        //Eigen::Matrix<float, 3, 1> t_float = static_cast<Eigen::Matrix<float, 3, 1>> (node_test.pose.translation());
+        //Eigen::Vector3f point_world = q_float.toRotationMatrix()*point+t_float;
+        ::cartographer::transform::Rigid3d pose_d = node_test.pose;
+        ::cartographer::transform::Rigid3f  pose_f = pose_d.cast<float>();
+        //::cartographer::transform::Rigid3d pose_tracking = node_test.constant_data->tracking_to_pose;
+        
+        //std::cout<<"x:"<<pose_tracking.translation()[0]<<" y:"<<pose_tracking.translation()[1]<<" z:"<<pose_tracking.translation()[2]<<std::endl;
+        //std::cout<<"x:"<<pose_f.translation()[0]<<" y:"<<pose_f.translation()[1]<<" z:"<<pose_f.translation()[2]<<std::endl;
+        Eigen::Vector3f point_world = pose_f.rotation().toRotationMatrix()*point+pose_f.translation();
+        pcl::PointXYZ point_temp_2d;
+        point_temp_2d.x = point_world[0];
+        point_temp_2d.y = point_world[1];
+        point_temp_2d.z = point_world[2];
+        cloud_test.push_back(point_temp_2d);
+    }
+  }
+
+  pcl::io::savePCDFileBinary("/home/yfb/slam2d.pcd",cloud_test);
+  for(const auto& node:trajectory_nodes)
+  {
+    //LOG(INFO)<<node.pose.DebugString();
+    auto q = node.pose.rotation();
+    std::string stem = std::to_string(node.time().time_since_epoch().count())+" "
+    +std::to_string(node.pose.translation().x())+" "+std::to_string(node.pose.translation().y())+" "+std::to_string(node.pose.translation().z())+
+    +" "+std::to_string(q.w())+" "+std::to_string(q.x())+" "+std::to_string(q.y())+" "+std::to_string(q.z())+"\n";
+    in<<stem;
+  }
+  in.close();
+
 }
 
 // Writes X-ray images and PLY files from the 'trajectory_nodes'. The filenames
