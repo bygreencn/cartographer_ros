@@ -16,8 +16,6 @@
 
 <launch>
   <param name="/use_sim_time" value="true" />
-  <param name="robot_description"
-    textfile="$(find cartographer_ros)/urdf/hokuyo_imu.urdf" />
 
   <arg name="debugger" default="" />
 
@@ -26,20 +24,19 @@
     type="robot_state_publisher">
   </node>
 
-  <node name="cartographer_node" pkg="cartographer_ros"
-      type="cartographer_node" args="
-          -configuration_directory $(find cartographer_ros)/configuration_files
-          -configuration_basename hokuyo_3d_imu.lua"
+  <node name="cartographer_offline_node" pkg="cartographer_ros"
+      type="cartographer_offline_node" args="
+          -configuration_directory
+              $(find cartographer_ros)/configuration_files
+          -configuration_basename hokuyo_2d_imu.lua
+	  -urdf_filename $(find cartographer_ros)/urdf/hokuyo_imu.urdf
+          -bag_filenames $(arg bag_filenames)"
       output="screen"
       launch-prefix="$(arg debugger)" >
   </node>
 
-  <node name="playbag" pkg="rosbag" type="play"
-      args="--clock $(arg bag_filename)" >
-  </node>
-
   <node name="rviz" pkg="rviz" type="rviz" required="true"
-      args="-d $(find cartographer_ros)/configuration_files/hokuyo_3d_imu.rviz">
+      args="-d $(find cartographer_ros)/configuration_files/hokuyo_2d_imu.rviz">
   </node>
   
   <!-- DEBUG -->		
