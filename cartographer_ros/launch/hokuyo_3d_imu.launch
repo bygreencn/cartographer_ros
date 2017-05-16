@@ -80,8 +80,8 @@
   <node name="xsens_driver" pkg="xsens_driver" 
       type="mtnode.py"  
       output="screen" >
-      <param name="device" value="/dev/ttyS0"/>
-      <param name="baudrate" value="115200"/>
+      <param name="device" value="/dev/ttyUSB0"/>
+      <param name="baudrate" value="460800"/>
       <param name="frame_id" value="imu_link"/>
       <param name="frame_local" value="ENU"/>
       <remap from="imu" to="imu" />
