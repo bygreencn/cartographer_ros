@@ -36,7 +36,7 @@ namespace cartographer_ros {
 // Default topic names; expected to be remapped as needed.
 constexpr char kLaserScanTopic[] = "scan";
 constexpr char kMultiEchoLaserScanTopic[] = "echoes";
-constexpr char kPointCloud2Topic[] = "points2";
+constexpr char kPointCloud2Topic[] = "/points2";
 constexpr char kImuTopic[] = "imu";
 constexpr char kOdometryTopic[] = "odom";
 constexpr char kFinishTrajectoryServiceName[] = "finish_trajectory";

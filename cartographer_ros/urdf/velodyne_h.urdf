@@ -63,12 +63,12 @@
   <joint name="horizontal_vlp16_link_joint" type="fixed">
     <parent link="base_link" />
     <child link="horizontal_vlp16_link" />
-    <origin xyz="0.15 0. 0.01" rpy="0. 0. 0." />
+    <origin xyz="0.155 0. 0.020" rpy="0. 0. 0.034906584" />
   </joint>
 
   <joint name="vertical_vlp16_link_joint" type="fixed">
     <parent link="base_link" />
     <child link="vertical_vlp16_link" />
-    <origin xyz="0.10 0. 0.15" rpy="0. -1.3963 0." />
+    <origin xyz="0.115 0. 0.160" rpy="0. 0.78539815 -0.069813169" />
   </joint>
 </robot>
