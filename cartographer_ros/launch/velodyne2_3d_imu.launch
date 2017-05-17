@@ -49,8 +49,8 @@
           -configuration_basename backpack_3d.lua"
       output="screen"
       launch-prefix="$(arg debugger)" >
-      <remap from="/points2_1" to="horizontal_laser_3d" />
-      <remap from="/points2_2" to="vertical_laser_3d" />
+      <!-- <remap from="/points2_1" to="horizontal_laser_3d" /> -->
+      <!-- <remap from="/points2_2" to="vertical_laser_3d" /> -->
 
   </node>
 
@@ -60,13 +60,13 @@
   </node>
 
    
-  <node name="rviz" pkg="rviz" type="rviz" required="true"
-      args="-d $(find cartographer_ros)/configuration_files/demo_3d.rviz">
+  <node name="rviz" pkg="rviz" type="rviz" required="false"
+      args="-d $(find cartographer_ros)/configuration_files/velodyne_3d_imu.rviz">
   </node>
   
   <!-- DEBUG -->		
   <!-- <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui"/> -->
-  <node name="rqt_graph" pkg="rqt_graph" type="rqt_graph"/>
+  <!-- <node name="rqt_graph" pkg="rqt_graph" type="rqt_graph"/> -->
   <!-- <node name="rqt_tf_tree" pkg="rqt_tf_tree" type="rqt_tf_tree"/> -->
   <!-- rosservice call /finish_trajectory "stem: 'zongheng'" -->
 </launch>
