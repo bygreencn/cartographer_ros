@@ -276,10 +276,16 @@ void Node::PublishOccupancyGrid(const string& frame_id, const ros::Time& time,
       const uint32 packed = pixel_data[y * size.x() + x];
       const unsigned char color = packed >> 16;
       const unsigned char observed = packed >> 8;
-      const int value =
-          observed == 0
-              ? -1
-              : ::cartographer::common::RoundToInt((1. - color / 255.) * 100.);
+      int value = -1;
+      if (observed) {
+        constexpr int kThreshold = 50;
+        if (::cartographer::common::RoundToInt((1. - color / 255.) * 100.) <
+            kThreshold) {
+          value = 0;
+        } else {
+          value = 100;
+        }
+      }
       CHECK_LE(-1, value);
       CHECK_GE(100, value);
       occupancy_grid.data.push_back(value);
