@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-#include <string>
-#include <vector>
-
-#include "cartographer/common/configuration_file_resolver.h"
-#include "cartographer/common/lua_parameter_dictionary.h"
-#include "cartographer/common/make_unique.h"
-#include "cartographer/common/port.h"
 #include "cartographer_ros/node.h"
 #include "cartographer_ros/node_options.h"
 #include "cartographer_ros/ros_log_sink.h"
@@ -34,22 +27,13 @@ DEFINE_string(configuration_directory, "",
 DEFINE_string(configuration_basename, "",
               "Basename, i.e. not containing any directory prefix, of the "
               "configuration file.");
+DEFINE_string(map_filename, "", "If non-empty, filename of a map to load.");
+DEFINE_bool(
+    start_trajectory_with_default_topics, true,
+    "Enable to immediately start the first trajectory with default topics.");
 
 namespace cartographer_ros {
 namespace {
-
-std::tuple<NodeOptions, TrajectoryOptions> LoadOptions() {
-  auto file_resolver = cartographer::common::make_unique<
-      cartographer::common::ConfigurationFileResolver>(
-      std::vector<string>{FLAGS_configuration_directory});
-  const string code =
-      file_resolver->GetFileContentOrDie(FLAGS_configuration_basename);
-  cartographer::common::LuaParameterDictionary lua_parameter_dictionary(
-      code, std::move(file_resolver));
-
-  return std::make_tuple(CreateNodeOptions(&lua_parameter_dictionary),
-                         CreateTrajectoryOptions(&lua_parameter_dictionary));
-}
 
 void Run() {
   constexpr double kTfBufferCacheTimeInSeconds = 1e6;
@@ -57,14 +41,22 @@ void Run() {
   tf2_ros::TransformListener tf(tf_buffer);
   NodeOptions node_options;
   TrajectoryOptions trajectory_options;
-  std::tie(node_options, trajectory_options) = LoadOptions();
+  std::tie(node_options, trajectory_options) =
+      LoadOptions(FLAGS_configuration_directory, FLAGS_configuration_basename);
 
   Node node(node_options, &tf_buffer);
-  node.StartTrajectoryWithDefaultTopics(trajectory_options);
+  if (!FLAGS_map_filename.empty()) {
+    node.LoadMap(FLAGS_map_filename);
+  }
+
+  if (FLAGS_start_trajectory_with_default_topics) {
+    node.StartTrajectoryWithDefaultTopics(trajectory_options);
+  }
 
   ::ros::spin();
 
   node.FinishAllTrajectories();
+  node.RunFinalOptimization();
 }
 
 }  // namespace

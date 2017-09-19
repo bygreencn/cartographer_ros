@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The Cartographer Authors
+ * Copyright 2016 The Cartographer Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-#ifndef CARTOGRAPHER_ROS_COLOR_MANAGER_H_
-#define CARTOGRAPHER_ROS_COLOR_MANAGER_H_
+#ifndef CARTOGRAPHER_ROS_SPLIT_STRING_H_
+#define CARTOGRAPHER_ROS_SPLIT_STRING_H_
 
-#include <std_msgs/ColorRGBA.h>
+#include <string>
+#include <vector>
 
 namespace cartographer_ros {
 
-// A function for on-demand generation of a color palette, with every two
-// direct successors having large contrast.
-::std_msgs::ColorRGBA GetColor(int id);
+// Split 'input' at 'delimiter'.
+std::vector<std::string> SplitString(const std::string& input, char delimiter);
 
 }  // namespace cartographer_ros
 
-#endif  // CARTOGRAPHER_ROS_COLOR_MANAGER_H_
+#endif  // CARTOGRAPHER_ROS_SPLIT_STRING_H_

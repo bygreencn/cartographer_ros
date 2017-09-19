@@ -21,7 +21,8 @@
 
 #include "cartographer/common/lua_parameter_dictionary.h"
 #include "cartographer/common/port.h"
-#include "cartographer_ros/sensor_bridge.h"
+#include "cartographer/mapping/proto/trajectory_builder_options.pb.h"
+#include "cartographer_ros_msgs/TrajectoryOptions.h"
 
 namespace cartographer_ros {
 
@@ -33,13 +34,22 @@ struct TrajectoryOptions {
   string odom_frame;
   bool provide_odom_frame;
   bool use_odometry;
-  bool use_laser_scan;
-  bool use_multi_echo_laser_scan;
+  int num_laser_scans;
+  int num_multi_echo_laser_scans;
+  int num_subdivisions_per_laser_scan;
   int num_point_clouds;
 };
 
 TrajectoryOptions CreateTrajectoryOptions(
     ::cartographer::common::LuaParameterDictionary* lua_parameter_dictionary);
+
+// Try to convert 'msg' into 'options'. Returns false on failure.
+bool FromRosMessage(const cartographer_ros_msgs::TrajectoryOptions& msg,
+                    TrajectoryOptions* options);
+
+// Converts 'trajectory_options' into a ROS message.
+cartographer_ros_msgs::TrajectoryOptions ToRosMessage(
+    const TrajectoryOptions& trajectory_options);
 
 }  // namespace cartographer_ros
 

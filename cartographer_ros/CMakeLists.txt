@@ -37,16 +37,22 @@ set(PACKAGE_DEPENDENCIES
 
 find_package(cartographer REQUIRED)
 include("${CARTOGRAPHER_CMAKE_DIR}/functions.cmake")
+set(BUILD_SHARED_LIBS OFF)
 google_initialize_cartographer_project()
 google_enable_testing()
 
 find_package(catkin REQUIRED COMPONENTS ${PACKAGE_DEPENDENCIES})
 
 include(FindPkgConfig)
-pkg_search_module(YAMLCPP REQUIRED yaml-cpp>=0.5.1)
 
 find_package(LuaGoogle REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common io)
+# Fix for PCL linking issue in Zesty, as in
+# https://github.com/ros-perception/perception_pcl/blob/b53b5d5c3abc7c3afde8a77177674e6d74c59522/pcl_ros/CMakeLists.txt#L12
+if(NOT "${PCL_LIBRARIES}" STREQUAL "")
+  # FIXME: this causes duplicates and not found error in ubuntu:zesty
+  list(REMOVE_ITEM PCL_LIBRARIES "/usr/lib/libmpi.so")
+endif()
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system iostreams)
 
@@ -73,7 +79,6 @@ catkin_package(
     # TODO(damonkohler): This should be here but causes Catkin to abort because
     # protobuf specifies a library '-lpthread' instead of just 'pthread'.
     # CARTOGRAPHER
-    YAMLCPP
     PCL
     EIGEN3
     Boost
@@ -91,10 +96,6 @@ add_library(${PROJECT_NAME} ${ALL_SRCS})
 add_subdirectory("cartographer_ros")
 
 target_link_libraries(${PROJECT_NAME} PUBLIC cartographer)
-
-# YAML
-target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${YAMLCPP_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PUBLIC ${YAMLCPP_LIBRARIES})
 
 # Lua
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${LUA_INCLUDE_DIR})

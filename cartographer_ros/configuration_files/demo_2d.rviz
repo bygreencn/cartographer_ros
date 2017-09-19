@@ -133,7 +133,6 @@ Visualization Manager:
       Visual Enabled: true
     - Class: Submaps
       Enabled: true
-      Map frame: map
       Name: Submaps
       Submap query service: /submap_query
       Topic: /submap_list
@@ -172,7 +171,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/MarkerArray
       Enabled: true
-      Marker Topic: /trajectory_nodes_list
+      Marker Topic: /trajectory_node_list
       Name: MarkerArray
       Namespaces:
         "": true

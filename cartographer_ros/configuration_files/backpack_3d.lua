@@ -24,8 +24,9 @@ options = {
   odom_frame = "odom",
   provide_odom_frame = true,
   use_odometry = false,
-  use_laser_scan = false,
-  use_multi_echo_laser_scan = false,
+  num_laser_scans = 0,
+  num_multi_echo_laser_scans = 0,
+  num_subdivisions_per_laser_scan = 1,
   num_point_clouds = 2,
   lookup_transform_timeout_sec = 0.2,
   submap_publish_period_sec = 0.3,
@@ -41,9 +42,6 @@ SPARSE_POSE_GRAPH.optimization_problem.huber_scale = 5e2
 SPARSE_POSE_GRAPH.optimize_every_n_scans = 320
 SPARSE_POSE_GRAPH.constraint_builder.sampling_ratio = 0.03
 SPARSE_POSE_GRAPH.optimization_problem.ceres_solver_options.max_num_iterations = 10
--- Reuse the coarser 3D voxel filter to speed up the computation of loop closure
--- constraints.
-SPARSE_POSE_GRAPH.constraint_builder.adaptive_voxel_filter = TRAJECTORY_BUILDER_3D.high_resolution_adaptive_voxel_filter
 SPARSE_POSE_GRAPH.constraint_builder.min_score = 0.62
 
 return options
