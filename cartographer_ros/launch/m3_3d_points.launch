@@ -14,27 +14,33 @@
   limitations under the License.
 -->
 <launch>
-  <arg name="ns" default="sensor" />
-
+  <arg name="ns" default="M8" />
+  <arg name="frame1" default="horizontal_m8_link" />
+  <arg name="frame2" default="vertical_m8_link" />
+  <arg name="topic1" default="points2_1" />
+  <arg name="topic2" default="points2_2" />
   <arg name="ip1" default="192.168.160.3" />
   <arg name="ip2" default="192.168.161.4" />
   <arg name="host1" default="$(arg ip1)" />
   <arg name="host2" default="$(arg ip2)" />
+  
+  
+
 
   <!-- driver -->
-  <group ns="$(arg ns)">
+  <!-- <group ns="$(arg ns)"> -->
     <node name="client_node1" 
           pkg="quanergy_client_ros" 
           type="client_node" 
-          args="-host $(arg host1) -settings $(find quanergy_client_ros)/settings/client1.xml -frame $(arg ns) -topic points2_1"
+          args="-host $(arg host1) -settings $(find quanergy_client_ros)/settings/client1.xml -frame $(arg frame1) -topic $(arg topic1)"
           required="true" 
           output="screen"/>
 
     <node name="client_node2" 
           pkg="quanergy_client_ros" 
           type="client_node" 
-          args="-host $(arg host2) -settings $(find quanergy_client_ros)/settings/client2.xml -frame $(arg ns) -topic points2_2"
+          args="-host $(arg host2) -settings $(find quanergy_client_ros)/settings/client2.xml -frame $(arg frame2) -topic $(arg topic2)"
           required="true" 
           output="screen"/>
-  </group>
+  <!--  </group>  -->
 </launch>

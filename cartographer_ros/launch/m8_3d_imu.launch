@@ -19,7 +19,8 @@
 
 <launch>
   <param name="robot_description"
-    textfile="$(find cartographer_ros)/urdf/velodyne_h.urdf" />
+    textfile="$(find cartographer_ros)/urdf/m8_3d.urdf" />
+  <param name="/use_sim_time" value="false" />
 
   <arg name="debugger" default="" />
   <!-- <param name="publish_frequency" type="double" value="200"/> -->
@@ -36,10 +37,11 @@
       type="mtnode.py"  
       output="screen" >
       <param name="device" value="/dev/ttyUSB0"/>
-      <param name="baudrate" value="460800"/>
+      <param name="baudrate" value="115200"/>
       <param name="frame_id" value="imu_link"/>
       <param name="frame_local" value="ENU"/>
-      <remap from="imu" to="imu" />
+      <param name="timeout" value="0.01"/>
+      <remap from="/imu/data" to="/imu" />
   </node>
 
   <include file="$(find cartographer_ros)/launch/m3_3d_points.launch" />
@@ -65,12 +67,12 @@
 -->
    
   <node name="rviz" pkg="rviz" type="rviz" required="true"
-      args="-d $(find cartographer_ros)/configuration_files/hokuyo_3d_imu.rviz">
+      args="-d $(find cartographer_ros)/configuration_files/m8_3d_imu.rviz">
   </node>
   
   <!-- DEBUG -->		
-  <!-- <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui"/> -->
-  <!-- <node name="rqt_graph" pkg="rqt_graph" type="rqt_graph"/> -->
+  <!-- <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui"/> --> 
+  <!-- <node name="rqt_graph" pkg="rqt_graph" type="rqt_graph"/> --> 
   <!-- <node name="rqt_tf_tree" pkg="rqt_tf_tree" type="rqt_tf_tree"/> -->
   <!-- rosservice call /finish_trajectory "stem: 'zongheng'" -->
 </launch>
